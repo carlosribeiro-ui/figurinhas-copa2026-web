@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
 import { TradeProposal } from '@/types';
@@ -17,6 +18,7 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export default function TradesPage() {
+  const router = useRouter();
   const { user } = useAuth();
   const [trades, setTrades] = useState<TradeProposal[]>([]);
   const [loading, setLoading] = useState(true);
@@ -150,6 +152,14 @@ export default function TradesPage() {
                       Recusar
                     </button>
                   </div>
+                )}
+                {trade.status === 'accepted' && (
+                  <button
+                    onClick={() => router.push('/chat')}
+                    className="w-full bg-green-800 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl transition-colors text-sm"
+                  >
+                    💬 Abrir chat com {other?.full_name ?? other?.username}
+                  </button>
                 )}
               </div>
             );
