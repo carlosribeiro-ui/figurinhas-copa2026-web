@@ -28,14 +28,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id, session.user.email);
+      if (session?.user) fetchProfile(session.user.id);
       else setLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id, session.user.email);
+      if (session?.user) fetchProfile(session.user.id);
       else {
         setProfile(null);
         setLoading(false);
@@ -45,10 +45,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  async function fetchProfile(userId: string, email?: string | null) {
+  async function fetchProfile(userId: string) {
     const { data } = await supabase.from('profiles').select('*').eq('id', userId).single();
-    // Mescla email do auth (não precisa de coluna extra no banco)
-    setProfile(data ? { ...data, email: email ?? null } : null);
+    setProfile(data ?? null);
     setLoading(false);
   }
 
@@ -65,10 +64,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Tenta inserir com todos os campos; se falhar, insere só os obrigatórios
       const { error: profileError } = await supabase
         .from('profiles')
-        .insert({ id: data.user.id, username, full_name: fullName, email });
+        .insert({ id: data.user.id, username, full_name: fullName });
 
       if (profileError) {
-        await supabase.from('profiles').insert({ id: data.user.id, username, email });
+        await supabase.from('profiles').insert({ id: data.user.id, username });
       }
     }
 

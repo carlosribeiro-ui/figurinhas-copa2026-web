@@ -34,12 +34,16 @@ export default function ProfilePage() {
       <div className="bg-green-800 dark:bg-gray-800 rounded-2xl p-8 mb-6 text-center text-white">
         <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center mx-auto mb-4">
           <span className="text-green-800 font-extrabold text-3xl">
-            {(profile?.full_name || profile?.username || user?.email || '?')[0].toUpperCase()}
+            {(profile?.full_name || profile?.username || '?')[0].toUpperCase()}
           </span>
         </div>
         <h1 className="text-2xl font-extrabold">{profile?.full_name ?? profile?.username}</h1>
+        {profile?.role === 'admin' && (
+          <span className="inline-block mt-1 bg-yellow-400 text-yellow-900 text-xs font-black px-2 py-0.5 rounded-full tracking-wide">
+            ⭐ ADMIN
+          </span>
+        )}
         <p className="text-green-300 mt-1">@{profile?.username}</p>
-        <p className="text-green-400 text-sm mt-0.5">{user?.email}</p>
         {profile?.city && <p className="text-green-300 text-sm mt-1">📍 {profile.city}</p>}
       </div>
 
@@ -138,9 +142,19 @@ export default function ProfilePage() {
               <span className="text-sm text-gray-500 dark:text-gray-400">Email</span>
               <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">{user?.email ?? '—'}</span>
             </div>
-            <div className="flex justify-between py-3">
+            <div className="flex justify-between py-3 border-b border-gray-50 dark:border-gray-700">
               <span className="text-sm text-gray-500 dark:text-gray-400">Cidade</span>
               <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">{profile?.city ?? '—'}</span>
+            </div>
+            <div className="flex justify-between py-3">
+              <span className="text-sm text-gray-500 dark:text-gray-400">Função</span>
+              <span className={`text-sm font-bold px-2 py-0.5 rounded-full ${
+                profile?.role === 'admin'
+                  ? 'bg-yellow-100 text-yellow-800'
+                  : 'text-gray-500 dark:text-gray-400'
+              }`}>
+                {profile?.role === 'admin' ? '⭐ Admin' : 'Usuário'}
+              </span>
             </div>
           </div>
         )}
