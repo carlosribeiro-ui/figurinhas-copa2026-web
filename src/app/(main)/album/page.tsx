@@ -9,18 +9,18 @@ import ProgressBar from '@/components/ProgressBar';
 import { COPA_2026_STICKERS, SECTIONS, COUNTRIES, TOTAL_STICKERS, COUNTRY_CODES, getFlagUrl } from '@/constants/stickers';
 import { Sticker } from '@/types';
 
-type FilterType = 'all' | 'have' | 'need' | 'unmarked';
+type FilterType = 'all' | 'have' | 'unmarked';
 type AlbumTab  = 'album' | 'duplicates';
 
 const FILTER_LABELS: Record<FilterType, string> = {
-  all: 'Todas', have: 'Tenho', need: 'Faltam', unmarked: 'Sem marca',
+  all: 'Todas', have: 'Tenho', unmarked: 'Faltam',
 };
 
 const TEAM_COUNTRIES = COUNTRIES.filter(c => !['ABERTURA', 'SEDES', 'LENDAS'].includes(c));
 
 export default function AlbumPage() {
   const { user } = useAuth();
-  const { userStickers, haveIds, needIds, duplicateIds, markSticker, decrementDuplicate, clearExtraDuplicates, removeSticker } = useStickers(user?.id);
+  const { userStickers, haveIds, duplicateIds, markSticker, decrementDuplicate, clearExtraDuplicates, removeSticker } = useStickers(user?.id);
 
   const [albumTab, setAlbumTab]               = useState<AlbumTab>('album');
   const [selectedSection, setSelectedSection] = useState('Todos');
@@ -43,11 +43,10 @@ export default function AlbumPage() {
       s.name.toLowerCase().includes(search.toLowerCase()) ||
       s.number.toLowerCase().includes(search.toLowerCase())
     );
-    if (filter === 'have')    stickers = stickers.filter(s => haveIds.includes(s.id));
-    if (filter === 'need')    stickers = stickers.filter(s => needIds.includes(s.id));
-    if (filter === 'unmarked') stickers = stickers.filter(s => !userStickers[s.id]);
+    if (filter === 'have')     stickers = stickers.filter(s => haveIds.includes(s.id));
+    if (filter === 'unmarked') stickers = stickers.filter(s => !userStickers[s.id] || (!haveIds.includes(s.id)));
     return stickers;
-  }, [selectedSection, selectedCountry, filter, search, userStickers, haveIds, needIds]);
+  }, [selectedSection, selectedCountry, filter, search, userStickers, haveIds]);
 
   const duplicateStickers = useMemo(() =>
     COPA_2026_STICKERS.filter(s => duplicateIds.includes(s.id)),
@@ -150,14 +149,8 @@ export default function AlbumPage() {
             <p className="text-[10px] sm:text-xs text-green-300 dark:text-gray-400">Repetidas</p>
           </div>
           <div className="text-center min-w-[44px]">
-            <p className="text-lg sm:text-2xl font-extrabold text-red-300">{needIds.length}</p>
+            <p className="text-lg sm:text-2xl font-extrabold text-red-300">{TOTAL_STICKERS - haveIds.length}</p>
             <p className="text-[10px] sm:text-xs text-green-300 dark:text-gray-400">Faltam</p>
-          </div>
-          <div className="text-center min-w-[44px]">
-            <p className="text-lg sm:text-2xl font-extrabold text-gray-300">
-              {TOTAL_STICKERS - haveIds.length - needIds.length}
-            </p>
-            <p className="text-[10px] sm:text-xs text-green-300 dark:text-gray-400">Não marc.</p>
           </div>
           <div className="flex-1 min-w-[80px]">
             <ProgressBar current={haveIds.length} total={TOTAL_STICKERS} label={`${haveIds.length} / ${TOTAL_STICKERS}`} color="#4ade80" />
@@ -336,7 +329,7 @@ export default function AlbumPage() {
 
             <div className="w-px h-5 bg-gray-200 dark:bg-gray-600 flex-shrink-0" />
 
-            {(['all', 'have', 'need', 'unmarked'] as FilterType[]).map(f => (
+            {(['all', 'have', 'unmarked'] as FilterType[]).map(f => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
@@ -415,27 +408,30 @@ export default function AlbumPage() {
           </div>
 
           {/* Barra bulk — Álbum */}
-          {selectMode && selected.size > 0 && (
-            <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-2xl px-4 py-3 flex items-center gap-3">
-              <span className="text-sm font-bold text-gray-700 dark:text-gray-300 mr-1">
-                {selected.size} selecionada{selected.size > 1 ? 's' : ''}
-              </span>
-              <button onClick={() => bulkMark('have')} disabled={bulkLoading}
-                className="flex-1 bg-green-800 hover:bg-green-700 disabled:opacity-40 text-white font-bold py-2.5 rounded-xl text-sm transition-all">
-                ✅ Tenho
-              </button>
-              <button onClick={() => bulkMark('duplicate')} disabled={bulkLoading}
-                className="flex-1 bg-amber-500 hover:bg-amber-400 disabled:opacity-40 text-white font-bold py-2.5 rounded-xl text-sm transition-all">
-                🔁 +Repetida
-              </button>
-              <button onClick={() => bulkMark('need')} disabled={bulkLoading}
-                className="flex-1 bg-red-600 hover:bg-red-500 disabled:opacity-40 text-white font-bold py-2.5 rounded-xl text-sm transition-all">
-                ❌ Falta
-              </button>
-              <button onClick={bulkRemove} disabled={bulkLoading}
-                className="px-4 py-2.5 rounded-xl text-sm font-bold text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-600">
-                🗑
-              </button>
+          {selectMode && (
+            <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-2xl px-3 py-3">
+              <div className="flex items-center gap-1 mb-2">
+                <span className="text-xs font-bold text-gray-500 dark:text-gray-400 flex-1">
+                  {selected.size === 0 ? 'Selecione figurinhas acima' : `${selected.size} selecionada${selected.size > 1 ? 's' : ''}`}
+                </span>
+                <button onClick={toggleSelectAll} className="text-xs font-bold text-blue-600 dark:text-blue-400 underline">
+                  {selected.size === filtered.length ? 'Desmarcar todas' : 'Todas'}
+                </button>
+              </div>
+              <div className="flex gap-1.5">
+                <button onClick={() => bulkMark('have')} disabled={bulkLoading || selected.size === 0}
+                  className="flex-1 bg-green-800 hover:bg-green-700 disabled:opacity-30 text-white font-bold py-2.5 rounded-xl text-xs transition-all">
+                  ✅ Tenho
+                </button>
+                <button onClick={() => bulkMark('duplicate')} disabled={bulkLoading || selected.size === 0}
+                  className="flex-1 bg-amber-500 hover:bg-amber-400 disabled:opacity-30 text-white font-bold py-2.5 rounded-xl text-xs transition-all">
+                  🔁 +Cópia
+                </button>
+                <button onClick={bulkRemove} disabled={bulkLoading || selected.size === 0}
+                  className="flex-1 bg-red-600 hover:bg-red-500 disabled:opacity-30 text-white font-bold py-2.5 rounded-xl text-xs transition-all">
+                  🗑 Remover
+                </button>
+              </div>
             </div>
           )}
         </>
