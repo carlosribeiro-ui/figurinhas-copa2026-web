@@ -40,6 +40,7 @@ function resolveDisplay(userSticker?: UserSticker): { bg: string; badge: string;
 export default function StickerCard({ sticker, userSticker, onPress, selectMode, selected }: StickerCardProps) {
   const display = resolveDisplay(userSticker);
   const flagUrl = getFlagUrl(sticker.country);
+  const prefix = sticker.number.match(/^[A-Z]+/)?.[0] ?? '';
   const numOnly = sticker.number.replace(/^[A-Z]+/, '');
 
   return (
@@ -47,7 +48,7 @@ export default function StickerCard({ sticker, userSticker, onPress, selectMode,
       onClick={onPress}
       className={`
         relative flex flex-col items-center justify-center gap-0.5
-        border-2 rounded-lg p-1 w-full aspect-square
+        border-2 rounded-lg p-1 lg:p-1.5 w-full aspect-square
         cursor-pointer transition-all duration-150 select-none
         hover:scale-105 active:scale-95 hover:shadow-md
         ${selected
@@ -72,26 +73,32 @@ export default function StickerCard({ sticker, userSticker, onPress, selectMode,
         <span className="absolute top-0 right-0.5 text-[8px] leading-none">✨</span>
       )}
 
+      {prefix && (
+        <span className="text-[9px] lg:text-[11px] font-black text-gray-500 dark:text-gray-400 leading-none tracking-tight">
+          {prefix}
+        </span>
+      )}
+
       {flagUrl ? (
         <img
           src={flagUrl}
           alt={sticker.country}
-          className="w-5 h-auto rounded-sm object-cover shadow-sm pointer-events-none"
+          className="w-[55%] h-auto rounded-sm object-cover shadow-sm pointer-events-none"
           loading="lazy"
           draggable={false}
         />
       ) : (
-        <span className="text-sm leading-none">
+        <span className="text-lg lg:text-2xl leading-none">
           {FWC_ICONS[sticker.type] ?? '🏆'}
         </span>
       )}
 
-      <span className="text-[10px] font-extrabold text-gray-800 dark:text-gray-100 leading-none">
+      <span className="text-[10px] lg:text-[13px] font-extrabold text-gray-800 dark:text-gray-100 leading-none">
         {numOnly}
       </span>
 
       {display && !selectMode && (
-        <span className={`text-[7px] font-bold px-1 py-0 rounded-full leading-4 ${display.badgeStyle}`}>
+        <span className={`text-[7px] lg:text-[9px] font-bold px-1 py-0 rounded-full leading-4 ${display.badgeStyle}`}>
           {display.badge}
         </span>
       )}

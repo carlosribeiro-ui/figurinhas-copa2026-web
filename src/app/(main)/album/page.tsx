@@ -235,7 +235,7 @@ export default function AlbumPage() {
                   </div>
                 </div>
 
-                <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}>
+                <div className="grid gap-1 [grid-template-columns:repeat(7,minmax(0,1fr))] lg:[grid-template-columns:repeat(12,minmax(0,1fr))]">
                   {duplicateStickers.map(sticker => (
                     <div key={sticker.id} className="relative">
                       <StickerCard
@@ -391,7 +391,7 @@ export default function AlbumPage() {
                 <p className="font-semibold">Nenhuma figurinha encontrada</p>
               </div>
             ) : (
-              <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}>
+              <div className="grid gap-1 [grid-template-columns:repeat(7,minmax(0,1fr))] lg:[grid-template-columns:repeat(12,minmax(0,1fr))]">
                 {filtered.map(sticker => (
                   <StickerCard
                     key={sticker.id}
