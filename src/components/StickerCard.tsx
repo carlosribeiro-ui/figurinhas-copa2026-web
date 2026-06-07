@@ -11,25 +11,26 @@ interface StickerCardProps {
   selected?: boolean;
 }
 
-const STATUS_BG: Record<string, string> = {
-  have:      'bg-green-50  border-green-400',
-  need:      'bg-red-50    border-red-300',
-  duplicate: 'bg-amber-50  border-amber-400',
-};
-
-const BADGE: Record<string, { bg: string; label: string }> = {
-  have:      { bg: 'bg-green-700 text-white',  label: 'Tenho' },
-  need:      { bg: 'bg-red-600   text-white',  label: 'Falta' },
-  duplicate: { bg: 'bg-amber-500 text-white',  label: 'Rep.'  },
-};
-
-// Ícone fallback para FWC (sem bandeira)
 const FWC_ICONS: Record<string, string> = {
   special: '🏆', stadium: '🏟️', legend: '⭐',
 };
 
+function resolveDisplay(userSticker?: UserSticker): { bg: string; badge: string; badgeStyle: string } | null {
+  if (!userSticker) return null;
+  const { status, quantity } = userSticker;
+  const isHave = status === 'have' || status === 'duplicate';
+  if (status === 'need') return { bg: 'bg-red-50 border-red-300', badge: 'Falta', badgeStyle: 'bg-red-600 text-white' };
+  if (isHave && quantity >= 2) return {
+    bg: 'bg-green-50 border-green-400',
+    badge: `Tenho +${quantity - 1}`,
+    badgeStyle: 'bg-amber-500 text-white',
+  };
+  if (isHave) return { bg: 'bg-green-50 border-green-400', badge: 'Tenho', badgeStyle: 'bg-green-700 text-white' };
+  return null;
+}
+
 export default function StickerCard({ sticker, userSticker, onPress, selectMode, selected }: StickerCardProps) {
-  const status   = userSticker?.status;
+  const display  = resolveDisplay(userSticker);
   const flagUrl  = getFlagUrl(sticker.country);
   const numOnly  = sticker.number.replace(/^[A-Z]+/, '');
 
@@ -44,8 +45,8 @@ export default function StickerCard({ sticker, userSticker, onPress, selectMode,
         hover:scale-105 active:scale-95 hover:shadow-md
         ${selected
           ? 'bg-blue-100 border-blue-500 ring-2 ring-blue-400 scale-105 shadow-md'
-          : status
-            ? STATUS_BG[status]
+          : display
+            ? display.bg
             : 'bg-white border-gray-200 hover:border-green-300 opacity-60 hover:opacity-100'
         }
       `}
@@ -66,7 +67,7 @@ export default function StickerCard({ sticker, userSticker, onPress, selectMode,
         <span className="absolute top-0.5 right-0.5 text-[10px] leading-none">✨</span>
       )}
 
-      {/* Bandeira real ou ícone FWC */}
+      {/* Bandeira ou ícone FWC */}
       {flagUrl ? (
         <img
           src={flagUrl}
@@ -86,16 +87,15 @@ export default function StickerCard({ sticker, userSticker, onPress, selectMode,
         {sticker.code}
       </span>
 
-      {/* Número 01–20 */}
+      {/* Número */}
       <span className="text-base font-extrabold text-gray-800 leading-none">
         {numOnly}
       </span>
 
       {/* Badge de status */}
-      {status && !selectMode && (
-        <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-full leading-none ${BADGE[status].bg}`}>
-          {BADGE[status].label}
-          {status === 'duplicate' && userSticker && userSticker.quantity > 1 ? ` ×${userSticker.quantity}` : ''}
+      {display && !selectMode && (
+        <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-full leading-none ${display.badgeStyle}`}>
+          {display.badge}
         </span>
       )}
     </button>
