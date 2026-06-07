@@ -101,7 +101,6 @@ export default function ExplorePage() {
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <p className="font-bold text-gray-800 dark:text-white">{item.profile.full_name || item.profile.username || 'Usuário'}</p>
-                      <p className="text-xs text-gray-400">@{item.profile.username ?? '—'}</p>
                       {item.profile.city && <p className="text-xs text-gray-400 mt-0.5">📍 {item.profile.city}</p>}
                     </div>
                     {item.matchScore > 0 && (

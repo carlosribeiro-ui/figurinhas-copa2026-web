@@ -94,7 +94,6 @@ export default function UserProfilePage() {
           </span>
         </div>
         <h1 className="text-2xl font-extrabold">{profile.full_name || profile.username || 'Usuário'}</h1>
-        <p className="text-green-300 mt-1">@{profile.username ?? '—'}</p>
         {profile.city && <p className="text-green-300 text-sm mt-1">📍 {profile.city}</p>}
       </div>
 
