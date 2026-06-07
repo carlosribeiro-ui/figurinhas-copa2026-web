@@ -98,7 +98,7 @@ function ChatInner() {
           <button onClick={() => setActiveTradeId(null)} className="text-green-300 hover:text-white text-xl font-bold">←</button>
           <div className="w-9 h-9 rounded-full bg-green-600 flex items-center justify-center">
             <span className="font-bold text-sm">
-              {(activeConv?.other_user.full_name ?? activeConv?.other_user.username ?? '?')[0].toUpperCase()}
+              {(activeConv?.other_user.full_name || activeConv?.other_user.username || '?')[0].toUpperCase()}
             </span>
           </div>
           <span className="font-bold">{activeConv?.other_user.full_name ?? activeConv?.other_user.username}</span>
@@ -166,7 +166,7 @@ function ChatInner() {
             >
               <div className="w-12 h-12 rounded-full bg-green-800 flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-extrabold text-lg">
-                  {(conv.other_user.full_name ?? conv.other_user.username ?? '?')[0].toUpperCase()}
+                  {(conv.other_user.full_name || conv.other_user.username || '?')[0].toUpperCase()}
                 </span>
               </div>
               <div className="flex-1 min-w-0">

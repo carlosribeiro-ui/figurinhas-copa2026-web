@@ -92,7 +92,7 @@ export default function TradesPage() {
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-full bg-green-800 flex items-center justify-center">
                     <span className="text-white font-bold">
-                      {(other?.full_name ?? other?.username ?? '?')[0].toUpperCase()}
+                      {(other?.full_name || other?.username || '?')[0].toUpperCase()}
                     </span>
                   </div>
                   <div className="flex-1">
@@ -110,13 +110,13 @@ export default function TradesPage() {
                       {tab === 'received' ? 'Oferece:' : 'Você oferece:'}
                     </p>
                     <div className="flex flex-wrap gap-1">
-                      {trade.sender_offers.slice(0, 8).map(id => (
+                      {(trade.sender_offers ?? []).slice(0, 8).map(id => (
                         <span key={id} className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-0.5 rounded">
                           {getStickerById(id)?.number ?? `#${id}`}
                         </span>
                       ))}
-                      {trade.sender_offers.length > 8 && (
-                        <span className="text-xs text-gray-400">+{trade.sender_offers.length - 8}</span>
+                      {(trade.sender_offers ?? []).length > 8 && (
+                        <span className="text-xs text-gray-400">+{(trade.sender_offers ?? []).length - 8}</span>
                       )}
                     </div>
                   </div>
@@ -125,13 +125,13 @@ export default function TradesPage() {
                       {tab === 'received' ? 'Pede em troca:' : 'Você quer:'}
                     </p>
                     <div className="flex flex-wrap gap-1">
-                      {trade.receiver_wants.slice(0, 8).map(id => (
+                      {(trade.receiver_wants ?? []).slice(0, 8).map(id => (
                         <span key={id} className="bg-red-100 text-red-700 text-xs font-semibold px-2 py-0.5 rounded">
                           {getStickerById(id)?.number ?? `#${id}`}
                         </span>
                       ))}
-                      {trade.receiver_wants.length > 8 && (
-                        <span className="text-xs text-gray-400">+{trade.receiver_wants.length - 8}</span>
+                      {(trade.receiver_wants ?? []).length > 8 && (
+                        <span className="text-xs text-gray-400">+{(trade.receiver_wants ?? []).length - 8}</span>
                       )}
                     </div>
                   </div>
