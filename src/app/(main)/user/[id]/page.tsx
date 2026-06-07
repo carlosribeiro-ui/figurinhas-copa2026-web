@@ -124,14 +124,14 @@ export default function UserProfilePage() {
               <p className="text-xs font-bold text-green-700 dark:text-green-300 mb-2">
                 🟢 Repetidas deles que você não tem ({theyCanOffer.length})
               </p>
-              <div className="flex flex-wrap gap-1">
-                {theyCanOffer.slice(0, 12).map(id => (
-                  <span key={id} className="bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 text-xs font-semibold px-2 py-0.5 rounded">
+              <div className="flex flex-wrap gap-0.5">
+                {theyCanOffer.slice(0, 20).map(id => (
+                  <span key={id} className="bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 text-[9px] font-bold px-1 py-0 rounded leading-4">
                     {getStickerById(id)?.number ?? id}
                   </span>
                 ))}
-                {theyCanOffer.length > 12 && <span className="text-xs text-gray-400">+{theyCanOffer.length - 12}</span>}
-                {theyCanOffer.length === 0 && <span className="text-xs text-gray-400 italic">Nenhuma</span>}
+                {theyCanOffer.length > 20 && <span className="text-[9px] text-gray-400">+{theyCanOffer.length - 20}</span>}
+                {theyCanOffer.length === 0 && <span className="text-[10px] text-gray-400 italic">Nenhuma</span>}
               </div>
             </div>
 
@@ -139,14 +139,14 @@ export default function UserProfilePage() {
               <p className="text-xs font-bold text-amber-700 dark:text-amber-300 mb-2">
                 🟡 Suas repetidas que eles não têm ({canOfferDups.length})
               </p>
-              <div className="flex flex-wrap gap-1">
-                {canOfferDups.slice(0, 12).map(id => (
-                  <span key={id} className="bg-amber-400 text-white text-xs font-semibold px-2 py-0.5 rounded">
+              <div className="flex flex-wrap gap-0.5">
+                {canOfferDups.slice(0, 20).map(id => (
+                  <span key={id} className="bg-amber-100 dark:bg-amber-800 text-amber-800 dark:text-amber-200 text-[9px] font-bold px-1 py-0 rounded leading-4">
                     {getStickerById(id)?.number ?? id}
                   </span>
                 ))}
-                {canOfferDups.length > 12 && <span className="text-xs text-gray-400">+{canOfferDups.length - 12}</span>}
-                {canOfferDups.length === 0 && <span className="text-xs text-gray-400 italic">Nenhuma</span>}
+                {canOfferDups.length > 20 && <span className="text-[9px] text-gray-400">+{canOfferDups.length - 20}</span>}
+                {canOfferDups.length === 0 && <span className="text-[10px] text-gray-400 italic">Nenhuma</span>}
               </div>
             </div>
           </div>

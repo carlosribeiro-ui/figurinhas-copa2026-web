@@ -243,7 +243,7 @@ export default function AlbumPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-5 sm:grid-cols-7 md:grid-cols-9 lg:grid-cols-11 xl:grid-cols-13 gap-1.5 sm:gap-2">
+                <div className="grid grid-cols-[repeat(7,minmax(0,1fr))] sm:grid-cols-10 md:grid-cols-13 lg:grid-cols-16 xl:grid-cols-20 gap-1">
                   {duplicateStickers.map(sticker => (
                     <div key={sticker.id} className="relative">
                       <StickerCard
@@ -399,7 +399,7 @@ export default function AlbumPage() {
                 <p className="font-semibold">Nenhuma figurinha encontrada</p>
               </div>
             ) : (
-              <div className="grid grid-cols-5 sm:grid-cols-7 md:grid-cols-9 lg:grid-cols-11 xl:grid-cols-13 gap-1.5 sm:gap-2">
+              <div className="grid grid-cols-[repeat(7,minmax(0,1fr))] sm:grid-cols-10 md:grid-cols-13 lg:grid-cols-16 xl:grid-cols-20 gap-1">
                 {filtered.map(sticker => (
                   <StickerCard
                     key={sticker.id}

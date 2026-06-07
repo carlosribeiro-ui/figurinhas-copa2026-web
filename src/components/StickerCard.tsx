@@ -45,10 +45,9 @@ export default function StickerCard({ sticker, userSticker, onPress, selectMode,
   return (
     <button
       onClick={onPress}
-      title={`${sticker.number} — ${sticker.name}`}
       className={`
-        relative flex flex-col items-center justify-between
-        border-2 rounded-xl p-1.5 w-full aspect-[3/4]
+        relative flex flex-col items-center justify-center gap-0.5
+        border-2 rounded-lg p-1 w-full aspect-square
         cursor-pointer transition-all duration-150
         hover:scale-105 active:scale-95 hover:shadow-md
         ${selected
@@ -61,8 +60,8 @@ export default function StickerCard({ sticker, userSticker, onPress, selectMode,
     >
       {selectMode && (
         <span className={`
-          absolute top-1 left-1 w-4 h-4 rounded-full border-2
-          flex items-center justify-center text-[9px] font-black z-10
+          absolute top-0.5 left-0.5 w-3 h-3 rounded-full border-2
+          flex items-center justify-center text-[7px] font-black z-10
           ${selected ? 'bg-blue-500 border-blue-500 text-white' : 'bg-white border-gray-400 dark:bg-gray-700 dark:border-gray-500'}
         `}>
           {selected && '✓'}
@@ -70,33 +69,28 @@ export default function StickerCard({ sticker, userSticker, onPress, selectMode,
       )}
 
       {sticker.is_shiny && (
-        <span className="absolute top-0.5 right-0.5 text-[10px] leading-none">✨</span>
+        <span className="absolute top-0 right-0.5 text-[8px] leading-none">✨</span>
       )}
 
       {flagUrl ? (
         <img
           src={flagUrl}
           alt={sticker.country}
-          className="w-8 h-auto rounded-sm object-cover mt-1 shadow-sm"
+          className="w-5 h-auto rounded-sm object-cover shadow-sm"
           loading="lazy"
         />
       ) : (
-        <span className="text-xl leading-none mt-1">
+        <span className="text-sm leading-none">
           {FWC_ICONS[sticker.type] ?? '🏆'}
         </span>
       )}
 
-      <span className={`text-[11px] font-black tracking-wider leading-none
-        ${sticker.is_shiny ? 'text-yellow-600' : 'text-gray-700 dark:text-gray-300'}`}>
-        {sticker.code}
-      </span>
-
-      <span className="text-base font-extrabold text-gray-800 dark:text-gray-100 leading-none">
+      <span className="text-[10px] font-extrabold text-gray-800 dark:text-gray-100 leading-none">
         {numOnly}
       </span>
 
       {display && !selectMode && (
-        <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-full leading-none ${display.badgeStyle}`}>
+        <span className={`text-[7px] font-bold px-1 py-0 rounded-full leading-4 ${display.badgeStyle}`}>
           {display.badge}
         </span>
       )}

@@ -7,15 +7,15 @@ import { useAuth } from '@/context/AuthContext';
 import { useStickers } from '@/hooks/useStickers';
 import ProgressBar from '@/components/ProgressBar';
 import { Profile } from '@/types';
-import { COPA_2026_STICKERS } from '@/constants/stickers';
+import { COPA_2026_STICKERS, getStickerById } from '@/constants/stickers';
 
 interface UserWithStickers {
   profile: Profile;
   haveIds: number[];
   dupIds: number[];
   matchScore: number;
-  theyHaveIWant: number;
-  iHaveTheyWant: number;
+  theyHaveIWantIds: number[];
+  iHaveTheyWantIds: number[];
 }
 
 export default function ExplorePage() {
@@ -45,10 +45,11 @@ export default function ExplorePage() {
           s.status === 'duplicate' || (s.status === 'have' && (s.quantity ?? 1) >= 2)
         ).map(s => s.sticker_id) ?? [];
         // they can offer me: their duplicates that I don't have
-        const theyHaveIWant = theirDups.filter(id => !myHaveIds.includes(id)).length;
+        const theyHaveIWantIds = theirDups.filter(id => !myHaveIds.includes(id));
         // I can offer them: my duplicates that they don't have
-        const iHaveTheyWant = myDuplicateIds.filter(id => !theirHave.includes(id)).length;
-        return { profile, haveIds: theirHave, dupIds: theirDups, matchScore: theyHaveIWant + iHaveTheyWant, theyHaveIWant, iHaveTheyWant };
+        const iHaveTheyWantIds = myDuplicateIds.filter(id => !theirHave.includes(id));
+        const matchScore = theyHaveIWantIds.length + iHaveTheyWantIds.length;
+        return { profile, haveIds: theirHave, dupIds: theirDups, matchScore, theyHaveIWantIds, iHaveTheyWantIds };
       })
     );
 
@@ -106,25 +107,49 @@ export default function ExplorePage() {
                     {item.matchScore > 0 && (
                       <div className="text-right flex-shrink-0">
                         <span className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs font-bold px-2 py-1 rounded-full">
-                          {item.matchScore} repetidas compatíveis
+                          🔄 {item.matchScore} compatíveis
                         </span>
                       </div>
                     )}
                   </div>
 
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {item.theyHaveIWant > 0 && (
-                      <span className="bg-green-50 dark:bg-green-900/50 text-green-700 dark:text-green-300 text-xs font-semibold px-2 py-1 rounded-lg">
-                        🟢 Tem {item.theyHaveIWant} repetida que você não tem
-                      </span>
+                  <div className="mt-2 space-y-1.5">
+                    {item.theyHaveIWantIds.length > 0 && (
+                      <div>
+                        <p className="text-[10px] font-bold text-green-700 dark:text-green-400 mb-1">
+                          🟢 Deles p/ você ({item.theyHaveIWantIds.length})
+                        </p>
+                        <div className="flex flex-wrap gap-0.5">
+                          {item.theyHaveIWantIds.slice(0, 16).map(id => (
+                            <span key={id} className="bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 text-[9px] font-bold px-1 py-0 rounded leading-4">
+                              {getStickerById(id)?.number ?? id}
+                            </span>
+                          ))}
+                          {item.theyHaveIWantIds.length > 16 && (
+                            <span className="text-[9px] text-gray-400">+{item.theyHaveIWantIds.length - 16}</span>
+                          )}
+                        </div>
+                      </div>
                     )}
-                    {item.iHaveTheyWant > 0 && (
-                      <span className="bg-amber-50 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 text-xs font-semibold px-2 py-1 rounded-lg">
-                        🟡 Você tem {item.iHaveTheyWant} repetida que ele não tem
-                      </span>
+                    {item.iHaveTheyWantIds.length > 0 && (
+                      <div>
+                        <p className="text-[10px] font-bold text-amber-600 dark:text-amber-400 mb-1">
+                          🟡 Suas p/ eles ({item.iHaveTheyWantIds.length})
+                        </p>
+                        <div className="flex flex-wrap gap-0.5">
+                          {item.iHaveTheyWantIds.slice(0, 16).map(id => (
+                            <span key={id} className="bg-amber-100 dark:bg-amber-800 text-amber-800 dark:text-amber-200 text-[9px] font-bold px-1 py-0 rounded leading-4">
+                              {getStickerById(id)?.number ?? id}
+                            </span>
+                          ))}
+                          {item.iHaveTheyWantIds.length > 16 && (
+                            <span className="text-[9px] text-gray-400">+{item.iHaveTheyWantIds.length - 16}</span>
+                          )}
+                        </div>
+                      </div>
                     )}
-                    {item.theyHaveIWant === 0 && item.iHaveTheyWant === 0 && (
-                      <span className="text-xs text-gray-400 italic">Nenhuma repetida compatível</span>
+                    {item.theyHaveIWantIds.length === 0 && item.iHaveTheyWantIds.length === 0 && (
+                      <span className="text-[10px] text-gray-400 italic">Nenhuma repetida compatível</span>
                     )}
                   </div>
 

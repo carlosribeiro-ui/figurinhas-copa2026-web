@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
 import { Profile, Message } from '@/types';
@@ -14,6 +15,7 @@ interface Conversation {
 
 export default function ChatPage() {
   const { user } = useAuth();
+  const searchParams = useSearchParams();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeTradeId, setActiveTradeId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -64,6 +66,11 @@ export default function ChatPage() {
     );
     setConversations(convs);
     setLoading(false);
+
+    const tradeParam = searchParams.get('trade');
+    if (tradeParam && convs.some(c => c.trade_id === tradeParam)) {
+      setActiveTradeId(tradeParam);
+    }
   }
 
   async function fetchMessages(tradeId: string) {

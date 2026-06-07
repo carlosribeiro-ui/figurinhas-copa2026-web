@@ -155,7 +155,7 @@ export default function TradesPage() {
                 )}
                 {trade.status === 'accepted' && (
                   <button
-                    onClick={() => router.push('/chat')}
+                    onClick={() => router.push(`/chat?trade=${trade.id}`)}
                     className="w-full bg-green-800 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl transition-colors text-sm"
                   >
                     💬 Abrir chat com {other?.full_name ?? other?.username}
