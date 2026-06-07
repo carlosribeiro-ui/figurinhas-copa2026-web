@@ -21,7 +21,7 @@ interface UserWithStickers {
 export default function ExplorePage() {
   const router = useRouter();
   const { user } = useAuth();
-  const { haveIds: myHaveIds, needIds: myNeedIds, duplicateIds: myDuplicateIds } = useStickers(user?.id);
+  const { haveIds: myHaveIds, needIds: myNeedIds } = useStickers(user?.id);
   const [users, setUsers] = useState<UserWithStickers[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -40,10 +40,10 @@ export default function ExplorePage() {
         const { data: stickers } = await supabase
           .from('user_stickers').select('sticker_id, status').eq('user_id', profile.id);
         const theirHave = stickers?.filter(s => s.status === 'have' || s.status === 'duplicate').map(s => s.sticker_id) ?? [];
-        const theirNeed = stickers?.filter(s => s.status === 'need').map(s => s.sticker_id) ?? [];
+        // anything not marked as 'have' is implicitly needed
         const theyHaveIWant = theirHave.filter(id => myNeedIds.includes(id)).length;
-        const iHaveTheyWant = myDuplicateIds.filter(id => theirNeed.includes(id)).length;
-        return { profile, haveIds: theirHave, needIds: theirNeed, matchScore: theyHaveIWant + iHaveTheyWant, theyHaveIWant, iHaveTheyWant };
+        const iHaveTheyWant = myHaveIds.filter(id => !theirHave.includes(id)).length;
+        return { profile, haveIds: theirHave, needIds: [], matchScore: theyHaveIWant + iHaveTheyWant, theyHaveIWant, iHaveTheyWant };
       })
     );
 
@@ -118,7 +118,7 @@ export default function ExplorePage() {
                       🟡 Precisa de {item.iHaveTheyWant} que você tem
                     </span>
                   )}
-                  {item.matchScore === 0 && (
+                  {item.theyHaveIWant === 0 && item.iHaveTheyWant === 0 && (
                     <span className="text-xs text-gray-400 italic">Nenhuma troca compatível ainda</span>
                   )}
                 </div>

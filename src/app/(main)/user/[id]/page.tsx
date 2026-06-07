@@ -13,7 +13,7 @@ export default function UserProfilePage() {
   const params = useParams();
   const router = useRouter();
   const { user } = useAuth();
-  const { needIds: myNeedIds, duplicateIds: myDuplicateIds } = useStickers(user?.id);
+  const { haveIds: myHaveIds, needIds: myNeedIds, duplicateIds: myDuplicateIds } = useStickers(user?.id);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [theirStickers, setTheirStickers] = useState<Record<number, UserSticker>>({});
   const [loading, setLoading] = useState(true);
@@ -41,18 +41,19 @@ export default function UserProfilePage() {
   }
 
   const theirHave = Object.values(theirStickers).filter(s => s.status === 'have' || s.status === 'duplicate').map(s => s.sticker_id);
-  const theirNeed = Object.values(theirStickers).filter(s => s.status === 'need').map(s => s.sticker_id);
 
-  const canOffer = myDuplicateIds.filter(id => theirNeed.includes(id));
+  // anything not marked as 'have' is implicitly needed
+  const canOffer     = myHaveIds.filter(id => !theirHave.includes(id));
+  const canOfferDups = myDuplicateIds.filter(id => !theirHave.includes(id));
   const theyCanOffer = theirHave.filter(id => myNeedIds.includes(id));
 
   async function proposeTrade() {
-    if (!user || canOffer.length === 0 || theyCanOffer.length === 0) return;
+    if (!user || canOfferDups.length === 0 || theyCanOffer.length === 0) return;
     setProposing(true);
     await supabase.from('trade_proposals').insert({
       sender_id: user.id,
       receiver_id: userId,
-      sender_offers: canOffer,
+      sender_offers: canOfferDups,   // só oferece repetidas
       receiver_wants: theyCanOffer,
       status: 'pending',
     });
@@ -116,10 +117,13 @@ export default function UserProfilePage() {
           </div>
 
           <div className="bg-amber-50 rounded-xl p-4">
-            <p className="text-xs font-bold text-amber-700 mb-2">🟡 Você tem o que eles precisam ({canOffer.length})</p>
+            <p className="text-xs font-bold text-amber-700 mb-2">
+              🟡 Você tem o que eles precisam ({canOffer.length})
+              {canOfferDups.length > 0 && <span className="text-amber-500 ml-1">· {canOfferDups.length} repetidas</span>}
+            </p>
             <div className="flex flex-wrap gap-1">
               {canOffer.slice(0, 12).map(id => (
-                <span key={id} className="bg-amber-100 text-amber-800 text-xs font-semibold px-2 py-0.5 rounded">
+                <span key={id} className={`text-xs font-semibold px-2 py-0.5 rounded ${myDuplicateIds.includes(id) ? 'bg-amber-400 text-white' : 'bg-amber-100 text-amber-800'}`}>
                   {getStickerById(id)?.number ?? id}
                 </span>
               ))}
@@ -132,12 +136,14 @@ export default function UserProfilePage() {
         {!proposed ? (
           <button
             onClick={proposeTrade}
-            disabled={proposing || canOffer.length === 0 || theyCanOffer.length === 0}
+            disabled={proposing || canOfferDups.length === 0 || theyCanOffer.length === 0}
             className="mt-5 w-full bg-green-800 hover:bg-green-700 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold py-3 rounded-xl transition-colors"
           >
-            {proposing ? 'Enviando proposta...' : canOffer.length === 0 || theyCanOffer.length === 0
-              ? 'Sem figurinhas compatíveis para trocar'
-              : 'Propor troca automática'}
+            {proposing ? 'Enviando proposta...' : canOfferDups.length === 0 || theyCanOffer.length === 0
+              ? canOffer.length > 0 && theyCanOffer.length > 0
+                ? 'Marque repetidas para propor troca'
+                : 'Sem figurinhas compatíveis para trocar'
+              : `Propor troca (${canOfferDups.length} repetidas suas × ${theyCanOffer.length} deles)`}
           </button>
         ) : (
           <div className="mt-5 bg-green-50 border border-green-200 text-green-700 font-semibold text-center py-3 rounded-xl">
