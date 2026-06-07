@@ -105,10 +105,9 @@ function ChatInner() {
             <p className="font-bold text-white leading-tight truncate">
               {activeConv?.other_user.full_name || activeConv?.other_user.username || 'Usuário'}
             </p>
-            <p className="text-green-300 text-xs truncate">
-              @{activeConv?.other_user.username ?? '—'}
-              {activeConv?.other_user.city ? ` · ${activeConv.other_user.city}` : ''}
-            </p>
+            {activeConv?.other_user.city && (
+              <p className="text-green-300 text-xs truncate">📍 {activeConv.other_user.city}</p>
+            )}
           </div>
         </div>
 
