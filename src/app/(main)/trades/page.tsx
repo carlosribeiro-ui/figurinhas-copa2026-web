@@ -32,7 +32,7 @@ export default function TradesPage() {
     const column = tab === 'received' ? 'receiver_id' : 'sender_id';
     const { data } = await supabase
       .from('trade_proposals')
-      .select('*, sender:profiles!sender_id(*), receiver:profiles!receiver_id(*)')
+      .select('*, sender:profiles!sender_id(id,username,full_name,city,avatar_url,role), receiver:profiles!receiver_id(id,username,full_name,city,avatar_url,role)')
       .eq(column, user!.id)
       .order('created_at', { ascending: false });
     setTrades(data ?? []);

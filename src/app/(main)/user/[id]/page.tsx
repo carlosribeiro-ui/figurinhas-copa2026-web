@@ -28,7 +28,7 @@ export default function UserProfilePage() {
 
   async function fetchData() {
     const [{ data: prof }, { data: stickers }] = await Promise.all([
-      supabase.from('profiles').select('*').eq('id', userId).single(),
+      supabase.from('profiles').select('id,username,full_name,city,avatar_url,role').eq('id', userId).single(),
       supabase.from('user_stickers').select('*').eq('user_id', userId),
     ]);
     setProfile(prof);

@@ -44,7 +44,7 @@ function ChatInner() {
     setLoading(true);
     const { data: trades } = await supabase
       .from('trade_proposals')
-      .select('id, sender_id, receiver_id, sender:profiles!sender_id(*), receiver:profiles!receiver_id(*)')
+      .select('id, sender_id, receiver_id, sender:profiles!sender_id(id,username,full_name,city,avatar_url,role), receiver:profiles!receiver_id(id,username,full_name,city,avatar_url,role)')
       .or(`sender_id.eq.${user!.id},receiver_id.eq.${user!.id}`)
       .eq('status', 'accepted');
 

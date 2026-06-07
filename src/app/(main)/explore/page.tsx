@@ -31,7 +31,7 @@ export default function ExplorePage() {
   async function fetchUsers() {
     setLoading(true);
     const { data: profiles } = await supabase
-      .from('profiles').select('*').neq('id', user?.id ?? '').limit(50);
+      .from('profiles').select('id,username,full_name,city,avatar_url,role').neq('id', user?.id ?? '').limit(50);
 
     if (!profiles) { setLoading(false); return; }
 
