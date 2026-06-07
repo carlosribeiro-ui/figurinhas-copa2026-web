@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { Sticker, UserSticker } from '@/types';
-import { COUNTRY_FLAGS } from '@/constants/stickers';
+import { getFlagUrl } from '@/constants/stickers';
 
 interface Props {
   visible: boolean;
@@ -22,7 +22,7 @@ export default function StickerActionModal({ visible, sticker, userSticker, onCl
 
   if (!visible || !sticker) return null;
 
-  const flag = COUNTRY_FLAGS[sticker.country] ?? '🌍';
+  const flagUrl = getFlagUrl(sticker.country);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
@@ -33,7 +33,10 @@ export default function StickerActionModal({ visible, sticker, userSticker, onCl
       >
         {/* Header */}
         <div className="flex items-center gap-3 mb-5">
-          <span className="text-4xl">{flag}</span>
+          {flagUrl
+            ? <img src={flagUrl} alt={sticker.country} className="w-12 h-auto rounded shadow-sm" />
+            : <span className="text-4xl">🏆</span>
+          }
           <div>
             <p className="text-xs text-gray-400 font-semibold">{sticker.number}</p>
             <p className="font-bold text-gray-800 text-base leading-tight">{sticker.name}</p>

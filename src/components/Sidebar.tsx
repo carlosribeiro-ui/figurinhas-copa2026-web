@@ -12,14 +12,25 @@ const NAV = [
   { href: '/profile', icon: '👤', label: 'Perfil'     },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+  open?: boolean;
+  onClose?: () => void;
+}
+
+export default function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { profile, signOut } = useAuth();
 
   return (
-    <aside className="w-64 min-h-screen bg-green-800 flex flex-col fixed left-0 top-0 bottom-0 z-30">
-      {/* Logo */}
-      <div className="px-6 py-6 border-b border-green-700">
+    <aside className={`
+      fixed left-0 top-0 bottom-0 z-30 w-64
+      bg-green-800 flex flex-col
+      transition-transform duration-300 ease-in-out
+      lg:translate-x-0
+      ${open ? 'translate-x-0' : '-translate-x-full'}
+    `}>
+      {/* Logo + botão fechar no mobile */}
+      <div className="px-6 py-5 border-b border-green-700 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className="text-3xl">⚽</span>
           <div>
@@ -27,9 +38,18 @@ export default function Sidebar() {
             <p className="text-green-300 text-xs">Copa 2026</p>
           </div>
         </div>
+        <button
+          onClick={onClose}
+          className="lg:hidden text-green-300 hover:text-white p-1 rounded"
+          aria-label="Fechar menu"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
-      {/* Navigation */}
+      {/* Navegação */}
       <nav className="flex-1 px-3 py-4 space-y-1">
         {NAV.map(item => {
           const active = pathname === item.href || pathname.startsWith(item.href + '/');
@@ -37,6 +57,7 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={onClose}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
                 active
                   ? 'bg-white text-green-800 shadow-md'
@@ -50,17 +71,17 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* User footer */}
+      {/* Rodapé do usuário */}
       <div className="px-4 py-4 border-t border-green-700">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center">
+          <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center flex-shrink-0">
             <span className="text-green-800 font-extrabold text-sm">
-              {(profile?.full_name ?? profile?.username ?? '?')[0].toUpperCase()}
+              {(profile?.full_name || profile?.username || '?')[0].toUpperCase()}
             </span>
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-white text-sm font-semibold truncate">
-              {profile?.full_name ?? profile?.username ?? 'Usuário'}
+              {profile?.full_name || profile?.username || 'Usuário'}
             </p>
             <p className="text-green-300 text-xs truncate">@{profile?.username}</p>
           </div>

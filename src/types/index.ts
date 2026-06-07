@@ -10,6 +10,7 @@ export interface Profile {
 export interface Sticker {
   id: number;
   number: string;
+  code: string;
   name: string;
   country: string;
   section: string;
