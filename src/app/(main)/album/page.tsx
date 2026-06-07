@@ -9,11 +9,11 @@ import ProgressBar from '@/components/ProgressBar';
 import { COPA_2026_STICKERS, SECTIONS, COUNTRIES, TOTAL_STICKERS, COUNTRY_CODES, getFlagUrl } from '@/constants/stickers';
 import { Sticker } from '@/types';
 
-type FilterType = 'all' | 'have' | 'unmarked';
+type FilterType = 'all' | 'have';
 type AlbumTab  = 'album' | 'duplicates';
 
 const FILTER_LABELS: Record<FilterType, string> = {
-  all: 'Todas', have: 'Tenho', unmarked: 'Faltam',
+  all: 'Todas', have: 'Tenho',
 };
 
 const TEAM_COUNTRIES = COUNTRIES.filter(c => !['ABERTURA', 'SEDES', 'LENDAS'].includes(c));
@@ -43,8 +43,7 @@ export default function AlbumPage() {
       s.name.toLowerCase().includes(search.toLowerCase()) ||
       s.number.toLowerCase().includes(search.toLowerCase())
     );
-    if (filter === 'have')     stickers = stickers.filter(s => haveIds.includes(s.id));
-    if (filter === 'unmarked') stickers = stickers.filter(s => !userStickers[s.id] || (!haveIds.includes(s.id)));
+    if (filter === 'have') stickers = stickers.filter(s => haveIds.includes(s.id));
     return stickers;
   }, [selectedSection, selectedCountry, filter, search, userStickers, haveIds]);
 
@@ -165,7 +164,7 @@ export default function AlbumPage() {
                 : 'bg-green-700 dark:bg-gray-700 text-white hover:bg-green-600 dark:hover:bg-gray-600'
             }`}
           >
-            {selectMode ? '✕ Cancelar' : '☑ Selecionar'}
+            {selectMode ? '✕ Cancelar' : '☑ Selecione Múltiplas'}
           </button>
         </div>
 
@@ -329,7 +328,7 @@ export default function AlbumPage() {
 
             <div className="w-px h-5 bg-gray-200 dark:bg-gray-600 flex-shrink-0" />
 
-            {(['all', 'have', 'unmarked'] as FilterType[]).map(f => (
+            {(['all', 'have'] as FilterType[]).map(f => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}

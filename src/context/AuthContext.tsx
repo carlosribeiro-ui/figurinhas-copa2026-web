@@ -65,11 +65,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Tenta inserir com todos os campos; se falhar, insere só os obrigatórios
       const { error: profileError } = await supabase
         .from('profiles')
-        .insert({ id: data.user.id, username, full_name: fullName });
+        .insert({ id: data.user.id, username, full_name: fullName, email });
 
       if (profileError) {
-        // Fallback: somente id + username (caso a tabela não tenha full_name)
-        await supabase.from('profiles').insert({ id: data.user.id, username });
+        await supabase.from('profiles').insert({ id: data.user.id, username, email });
       }
     }
 
