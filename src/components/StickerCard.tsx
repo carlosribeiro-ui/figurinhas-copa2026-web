@@ -48,7 +48,7 @@ export default function StickerCard({ sticker, userSticker, onPress, selectMode,
       className={`
         relative flex flex-col items-center justify-center gap-0.5
         border-2 rounded-lg p-1 w-full aspect-square
-        cursor-pointer transition-all duration-150
+        cursor-pointer transition-all duration-150 select-none
         hover:scale-105 active:scale-95 hover:shadow-md
         ${selected
           ? 'bg-blue-100 border-blue-500 ring-2 ring-blue-400 scale-105 shadow-md dark:bg-blue-900 dark:border-blue-400'
@@ -76,8 +76,9 @@ export default function StickerCard({ sticker, userSticker, onPress, selectMode,
         <img
           src={flagUrl}
           alt={sticker.country}
-          className="w-5 h-auto rounded-sm object-cover shadow-sm"
+          className="w-5 h-auto rounded-sm object-cover shadow-sm pointer-events-none"
           loading="lazy"
+          draggable={false}
         />
       ) : (
         <span className="text-sm leading-none">
