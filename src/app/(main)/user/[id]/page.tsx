@@ -80,11 +80,11 @@ export default function UserProfilePage() {
       <div className="bg-green-800 rounded-2xl p-8 mb-6 text-center text-white">
         <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center mx-auto mb-4">
           <span className="text-green-800 font-extrabold text-3xl">
-            {(profile.full_name ?? profile.username)[0].toUpperCase()}
+            {(profile.full_name || profile.username || '?')[0].toUpperCase()}
           </span>
         </div>
-        <h1 className="text-2xl font-extrabold">{profile.full_name ?? profile.username}</h1>
-        <p className="text-green-300 mt-1">@{profile.username}</p>
+        <h1 className="text-2xl font-extrabold">{profile.full_name || profile.username || 'Usuário'}</h1>
+        <p className="text-green-300 mt-1">@{profile.username ?? '—'}</p>
         {profile.city && <p className="text-green-300 text-sm mt-1">📍 {profile.city}</p>}
       </div>
 

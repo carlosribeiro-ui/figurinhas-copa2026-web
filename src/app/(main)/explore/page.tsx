@@ -54,7 +54,7 @@ export default function ExplorePage() {
 
   const filtered = search
     ? users.filter(u =>
-        u.profile.username.toLowerCase().includes(search.toLowerCase()) ||
+        (u.profile.username ?? '').toLowerCase().includes(search.toLowerCase()) ||
         (u.profile.full_name ?? '').toLowerCase().includes(search.toLowerCase())
       )
     : users;
@@ -88,14 +88,14 @@ export default function ExplorePage() {
             >
               <div className="w-12 h-12 rounded-full bg-green-800 flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-extrabold text-lg">
-                  {(item.profile.full_name ?? item.profile.username)[0].toUpperCase()}
+                  {(item.profile.full_name || item.profile.username || '?')[0].toUpperCase()}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <p className="font-bold text-gray-800">{item.profile.full_name ?? item.profile.username}</p>
-                    <p className="text-xs text-gray-400">@{item.profile.username}</p>
+                    <p className="font-bold text-gray-800">{item.profile.full_name || item.profile.username || 'Usuário'}</p>
+                    <p className="text-xs text-gray-400">@{item.profile.username ?? '—'}</p>
                     {item.profile.city && <p className="text-xs text-gray-400 mt-0.5">📍 {item.profile.city}</p>}
                   </div>
                   {item.matchScore > 0 && (
