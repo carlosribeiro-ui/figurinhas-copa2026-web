@@ -94,14 +94,22 @@ function ChatInner() {
   if (activeTradeId) {
     return (
       <div className="flex flex-col h-full">
-        <div className="bg-green-800 text-white px-5 py-4 flex items-center gap-3">
-          <button onClick={() => setActiveTradeId(null)} className="text-green-300 hover:text-white text-xl font-bold">←</button>
-          <div className="w-9 h-9 rounded-full bg-green-600 flex items-center justify-center">
-            <span className="font-bold text-sm">
+        <div className="bg-green-800 text-white px-4 py-3 flex items-center gap-3">
+          <button onClick={() => setActiveTradeId(null)} className="text-green-300 hover:text-white text-xl font-bold flex-shrink-0">←</button>
+          <div className="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center flex-shrink-0">
+            <span className="font-bold text-base">
               {(activeConv?.other_user.full_name || activeConv?.other_user.username || '?')[0].toUpperCase()}
             </span>
           </div>
-          <span className="font-bold">{activeConv?.other_user.full_name ?? activeConv?.other_user.username}</span>
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-white leading-tight truncate">
+              {activeConv?.other_user.full_name || activeConv?.other_user.username || 'Usuário'}
+            </p>
+            <p className="text-green-300 text-xs truncate">
+              @{activeConv?.other_user.username ?? '—'}
+              {activeConv?.other_user.city ? ` · ${activeConv.other_user.city}` : ''}
+            </p>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-gray-50 dark:bg-gray-900">
@@ -110,7 +118,7 @@ function ChatInner() {
             return (
               <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-xs rounded-2xl px-4 py-2.5 shadow-sm ${isMe ? 'bg-green-800 text-white rounded-br-sm' : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-sm'}`}>
-                  <p className="text-sm">{msg.content}</p>
+                  <p className="text-sm select-text cursor-text">{msg.content}</p>
                   <p className={`text-[10px] mt-1 ${isMe ? 'text-green-300' : 'text-gray-400'} text-right`}>
                     {new Date(msg.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                   </p>
