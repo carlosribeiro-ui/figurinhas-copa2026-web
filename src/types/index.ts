@@ -1,6 +1,7 @@
 export interface Profile {
   id: string;
   username: string;
+  email?: string | null;      // vem do auth.users, não precisa de coluna no banco
   full_name: string | null;
   avatar_url: string | null;
   city: string | null;

@@ -11,7 +11,7 @@ interface AuthContextType {
   profile: Profile | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string, username: string, fullName: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, username: string, fullName: string) => Promise<{ error: Error | null; needsConfirmation?: boolean }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<Error | null>;
 }
@@ -28,14 +28,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id);
+      if (session?.user) fetchProfile(session.user.id, session.user.email);
       else setLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id);
+      if (session?.user) fetchProfile(session.user.id, session.user.email);
       else {
         setProfile(null);
         setLoading(false);
@@ -45,9 +45,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  async function fetchProfile(userId: string) {
+  async function fetchProfile(userId: string, email?: string | null) {
     const { data } = await supabase.from('profiles').select('*').eq('id', userId).single();
-    setProfile(data);
+    // Mescla email do auth (não precisa de coluna extra no banco)
+    setProfile(data ? { ...data, email: email ?? null } : null);
     setLoading(false);
   }
 
@@ -59,9 +60,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function signUp(email: string, password: string, username: string, fullName: string) {
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) return { error };
+
     if (data.user) {
-      await supabase.from('profiles').insert({ id: data.user.id, username, full_name: fullName });
+      // Tenta inserir com todos os campos; se falhar, insere só os obrigatórios
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert({ id: data.user.id, username, full_name: fullName });
+
+      if (profileError) {
+        // Fallback: somente id + username (caso a tabela não tenha full_name)
+        await supabase.from('profiles').insert({ id: data.user.id, username });
+      }
     }
+
+    // Supabase pode exigir confirmação de email antes de criar sessão
+    if (!data.session) {
+      return { error: null, needsConfirmation: true };
+    }
+
     return { error: null };
   }
 

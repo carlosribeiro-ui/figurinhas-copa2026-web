@@ -27,9 +27,9 @@ export default function ProfilePage() {
   const completionPct = TOTAL_STICKERS > 0 ? ((haveIds.length / TOTAL_STICKERS) * 100).toFixed(1) : '0';
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
+    <div className="p-6 max-w-2xl mx-auto dark:text-gray-100">
       {/* Header */}
-      <div className="bg-green-800 rounded-2xl p-8 mb-6 text-center text-white">
+      <div className="bg-green-800 dark:bg-gray-800 rounded-2xl p-8 mb-6 text-center text-white">
         <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center mx-auto mb-4">
           <span className="text-green-800 font-extrabold text-3xl">
             {(profile?.full_name || profile?.username || user?.email || '?')[0].toUpperCase()}
@@ -42,8 +42,8 @@ export default function ProfilePage() {
       </div>
 
       {/* Stats */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
-        <h2 className="font-bold text-gray-800 text-lg mb-4">Meu Progresso</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6 mb-6">
+        <h2 className="font-bold text-gray-800 dark:text-gray-100 text-lg mb-4">Meu Progresso</h2>
         <ProgressBar
           current={haveIds.length}
           total={TOTAL_STICKERS}
@@ -66,9 +66,9 @@ export default function ProfilePage() {
       </div>
 
       {/* Edit profile */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6 mb-6">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="font-bold text-gray-800 text-lg">Informações</h2>
+          <h2 className="font-bold text-gray-800 dark:text-gray-100 text-lg">Informações</h2>
           {!editing && (
             <button
               onClick={() => { setFullName(profile?.full_name ?? ''); setCity(profile?.city ?? ''); setEditing(true); }}
@@ -124,17 +124,21 @@ export default function ProfilePage() {
           </form>
         ) : (
           <div className="space-y-3">
-            <div className="flex justify-between py-3 border-b border-gray-50">
-              <span className="text-sm text-gray-500">Nome</span>
-              <span className="text-sm font-semibold text-gray-800">{profile?.full_name ?? '—'}</span>
+            <div className="flex justify-between py-3 border-b border-gray-50 dark:border-gray-700">
+              <span className="text-sm text-gray-500 dark:text-gray-400">Nome</span>
+              <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">{profile?.full_name ?? '—'}</span>
             </div>
-            <div className="flex justify-between py-3 border-b border-gray-50">
-              <span className="text-sm text-gray-500">Username</span>
-              <span className="text-sm font-semibold text-gray-800">@{profile?.username}</span>
+            <div className="flex justify-between py-3 border-b border-gray-50 dark:border-gray-700">
+              <span className="text-sm text-gray-500 dark:text-gray-400">Username</span>
+              <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">@{profile?.username}</span>
+            </div>
+            <div className="flex justify-between py-3 border-b border-gray-50 dark:border-gray-700">
+              <span className="text-sm text-gray-500 dark:text-gray-400">Email</span>
+              <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">{user?.email ?? '—'}</span>
             </div>
             <div className="flex justify-between py-3">
-              <span className="text-sm text-gray-500">Cidade</span>
-              <span className="text-sm font-semibold text-gray-800">{profile?.city ?? '—'}</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Cidade</span>
+              <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">{profile?.city ?? '—'}</span>
             </div>
           </div>
         )}

@@ -9,6 +9,10 @@
   body {
     @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
   }
+  /* Inputs sempre com texto escuro explícito para evitar herdar branco do dark mode */
+  input, textarea, select {
+    @apply text-gray-900;
+  }
 }
 
 @layer utilities {

@@ -298,7 +298,7 @@ export default function AlbumPage() {
               placeholder="Buscar..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-green-400 flex-shrink-0 w-28 sm:w-36"
+              className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:!text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-green-400 flex-shrink-0 w-28 sm:w-36"
             />
 
             <div className="w-px h-5 bg-gray-200 dark:bg-gray-600 flex-shrink-0" />
