@@ -135,7 +135,7 @@ export default function AlbumPage() {
   const selectedCode    = selectedCountry ? (COUNTRY_CODES[selectedCountry] ?? '') : '';
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-gray-50 dark:bg-gray-900">
+    <div className="flex flex-col h-full overflow-hidden bg-gray-50 dark:bg-gray-900">
 
       {/* ── Stats bar ── */}
       <div className="bg-green-800 dark:bg-gray-800 text-white px-4 py-3">

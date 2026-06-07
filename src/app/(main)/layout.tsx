@@ -30,8 +30,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   if (version === 'mobile') {
     return (
       <AuthGuard>
-        <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
-          <main className="flex-1 overflow-y-auto" style={{ paddingBottom: '64px' }}>
+        <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900">
+          <main className="flex-1 overflow-y-auto min-h-0">
             {children}
           </main>
           <MobileNav />
@@ -67,7 +67,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             <span className="text-white font-extrabold text-base">⚽ Figurinhas Copa 2026</span>
           </header>
 
-          <main className="flex-1 overflow-hidden">
+          <main className="flex-1 overflow-y-auto min-h-0">
             {children}
           </main>
         </div>
