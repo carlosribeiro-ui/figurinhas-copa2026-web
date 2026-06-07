@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { VersionProvider } from '@/context/VersionContext';
 
 export const metadata: Metadata = {
   title: 'Figurinhas Copa 2026',
@@ -22,7 +23,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeProvider>
           <AuthProvider>
-            {children}
+            <VersionProvider>
+              {children}
+            </VersionProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

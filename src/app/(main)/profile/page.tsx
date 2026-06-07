@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useVersion } from '@/context/VersionContext';
 import { useStickers } from '@/hooks/useStickers';
 import ProgressBar from '@/components/ProgressBar';
 import { TOTAL_STICKERS } from '@/constants/stickers';
 
 export default function ProfilePage() {
   const { user, profile, signOut, updateProfile } = useAuth();
+  const { version, setVersion } = useVersion();
   const { haveIds, needIds, duplicateIds } = useStickers(user?.id);
   const [editing, setEditing] = useState(false);
   const [fullName, setFullName] = useState(profile?.full_name ?? '');
@@ -142,6 +144,33 @@ export default function ProfilePage() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Trocar versão */}
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-5 mb-4">
+        <h2 className="font-bold text-gray-800 dark:text-gray-100 mb-3">Versão do App</h2>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setVersion('mobile')}
+            className={`flex-1 py-3 rounded-xl font-bold text-sm border-2 transition-all ${
+              version === 'mobile'
+                ? 'bg-green-800 border-green-800 text-white'
+                : 'border-gray-200 text-gray-500 hover:border-green-300'
+            }`}
+          >
+            📱 Mobile
+          </button>
+          <button
+            onClick={() => setVersion('web')}
+            className={`flex-1 py-3 rounded-xl font-bold text-sm border-2 transition-all ${
+              version === 'web'
+                ? 'bg-green-800 border-green-800 text-white'
+                : 'border-gray-200 text-gray-500 hover:border-green-300'
+            }`}
+          >
+            💻 Web
+          </button>
+        </div>
       </div>
 
       <button
