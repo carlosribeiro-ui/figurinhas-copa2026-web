@@ -1,35 +1,34 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 
 interface ThemeContextType {
-  isDark: boolean;
   toggle: () => void;
 }
 
-const ThemeContext = createContext<ThemeContextType>({ isDark: false, toggle: () => {} });
+const ThemeContext = createContext<ThemeContextType>({ toggle: () => {} });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [isDark, setIsDark] = useState(false);
-
   useEffect(() => {
-    const stored = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const dark = stored ? stored === 'dark' : prefersDark;
-    setIsDark(dark);
-    document.documentElement.classList.toggle('dark', dark);
+    // Aplica tema salvo (ou preferência do sistema) sem causar mismatch de hidratação
+    try {
+      const stored = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+      const dark = stored ? stored === 'dark' : prefersDark;
+      document.documentElement.classList.toggle('dark', dark);
+    } catch {}
   }, []);
 
   function toggle() {
-    setIsDark(prev => {
-      const next = !prev;
+    try {
+      const isDark = document.documentElement.classList.contains('dark');
+      const next = !isDark;
       document.documentElement.classList.toggle('dark', next);
       localStorage.setItem('theme', next ? 'dark' : 'light');
-      return next;
-    });
+    } catch {}
   }
 
-  return <ThemeContext.Provider value={{ isDark, toggle }}>{children}</ThemeContext.Provider>;
+  return <ThemeContext.Provider value={{ toggle }}>{children}</ThemeContext.Provider>;
 }
 
 export const useTheme = () => useContext(ThemeContext);

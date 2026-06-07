@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 
+
 const NAV = [
   { href: '/album',   icon: '📚', label: 'Meu Álbum'  },
   { href: '/explore', icon: '🔍', label: 'Explorar'   },
@@ -21,7 +22,7 @@ interface SidebarProps {
 export default function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { profile, signOut } = useAuth();
-  const { isDark, toggle } = useTheme();
+  const { toggle } = useTheme();
 
   return (
     <aside className={`
@@ -73,15 +74,18 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         })}
       </nav>
 
-      {/* Dark mode toggle */}
+      {/* Dark mode toggle — usa CSS dark: para evitar hydration mismatch */}
       <div className="px-4 pb-2">
         <button
           onClick={toggle}
           className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold
             text-green-100 dark:text-gray-300 hover:bg-green-700 dark:hover:bg-gray-700 transition-all"
         >
-          <span className="text-lg">{isDark ? '☀️' : '🌙'}</span>
-          {isDark ? 'Modo claro' : 'Modo escuro'}
+          {/* Ícone: lua no modo claro, sol no modo escuro */}
+          <span className="text-lg dark:hidden">🌙</span>
+          <span className="text-lg hidden dark:block">☀️</span>
+          <span className="dark:hidden">Modo escuro</span>
+          <span className="hidden dark:block">Modo claro</span>
         </button>
       </div>
 
