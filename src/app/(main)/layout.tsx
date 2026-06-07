@@ -8,8 +8,16 @@ import VersionSelector from '@/components/VersionSelector';
 import { useVersion } from '@/context/VersionContext';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
-  const { version } = useVersion();
+  const { version, loaded } = useVersion();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  if (!loaded) {
+    return (
+      <AuthGuard>
+        <div className="min-h-screen bg-green-800" />
+      </AuthGuard>
+    );
+  }
 
   if (version === null) {
     return (
@@ -23,7 +31,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     return (
       <AuthGuard>
         <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
-          <main className="flex-1 pb-16 overflow-hidden">
+          <main className="flex-1 overflow-y-auto" style={{ paddingBottom: '64px' }}>
             {children}
           </main>
           <MobileNav />

@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(Copy-Item *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(vercel --prod)"
     ]
   }
 }

@@ -6,10 +6,15 @@ export type AppVersion = 'mobile' | 'web' | null;
 
 interface VersionContextType {
   version: AppVersion;
+  loaded: boolean;
   setVersion: (v: 'mobile' | 'web') => void;
 }
 
-const VersionContext = createContext<VersionContextType>({ version: null, setVersion: () => {} });
+const VersionContext = createContext<VersionContextType>({
+  version: null,
+  loaded: false,
+  setVersion: () => {},
+});
 
 export function VersionProvider({ children }: { children: ReactNode }) {
   const [version, setVersionState] = useState<AppVersion>(null);
@@ -17,7 +22,7 @@ export function VersionProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem('app-version') as AppVersion;
-    setVersionState(saved === 'mobile' || saved === 'web' ? saved : null);
+    if (saved === 'mobile' || saved === 'web') setVersionState(saved);
     setLoaded(true);
   }, []);
 
@@ -26,10 +31,8 @@ export function VersionProvider({ children }: { children: ReactNode }) {
     setVersionState(v);
   }
 
-  if (!loaded) return null;
-
   return (
-    <VersionContext.Provider value={{ version, setVersion }}>
+    <VersionContext.Provider value={{ version, loaded, setVersion }}>
       {children}
     </VersionContext.Provider>
   );
