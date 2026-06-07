@@ -31,7 +31,7 @@ export default function StickerActionModal({ visible, sticker, userSticker, onCl
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
       <div
-        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 z-10"
+        className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-sm p-6 z-10"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -41,9 +41,8 @@ export default function StickerActionModal({ visible, sticker, userSticker, onCl
             : <span className="text-4xl">🏆</span>
           }
           <div>
-            <p className="text-xs text-gray-400 font-semibold">{sticker.number}</p>
-            <p className="font-bold text-gray-800 text-base leading-tight">{sticker.name}</p>
-            <p className="text-xs text-gray-500">{sticker.section}</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 font-semibold">{sticker.number}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">{sticker.section}</p>
           </div>
           {sticker.is_shiny && <span className="ml-auto text-xl">✨</span>}
         </div>
@@ -55,7 +54,7 @@ export default function StickerActionModal({ visible, sticker, userSticker, onCl
             className={`w-full py-3 rounded-xl font-semibold text-sm transition-all ${
               isHave
                 ? 'bg-green-800 text-white ring-2 ring-green-400'
-                : 'bg-green-50 text-green-800 hover:bg-green-100'
+                : 'bg-green-50 text-green-800 hover:bg-green-100 dark:bg-green-950 dark:text-green-300 dark:hover:bg-green-900'
             }`}
           >
             ✅ Tenho esta figurinha
@@ -65,18 +64,18 @@ export default function StickerActionModal({ visible, sticker, userSticker, onCl
             className={`w-full py-3 rounded-xl font-semibold text-sm transition-all ${
               userSticker?.status === 'need'
                 ? 'bg-red-600 text-white ring-2 ring-red-300'
-                : 'bg-red-50 text-red-700 hover:bg-red-100'
+                : 'bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-950 dark:text-red-300 dark:hover:bg-red-900'
             }`}
           >
             ❌ Preciso desta figurinha
           </button>
         </div>
 
-        {/* Repetidas — contador separado */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-center justify-between mb-3">
+        {/* Repetidas — contador */}
+        <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-xl px-4 py-3 flex items-center justify-between mb-3">
           <div>
-            <p className="text-xs font-bold text-amber-700 uppercase tracking-wide">🔁 Repetidas</p>
-            <p className="text-[11px] text-amber-600 mt-0.5">
+            <p className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wide">🔁 Repetidas</p>
+            <p className="text-[11px] text-amber-600 dark:text-amber-500 mt-0.5">
               {extraCount === 0 ? 'Nenhuma cópia extra' : `${extraCount} cópia${extraCount > 1 ? 's' : ''} extra`}
             </p>
           </div>
@@ -84,11 +83,11 @@ export default function StickerActionModal({ visible, sticker, userSticker, onCl
             <button
               onClick={onDecrementDuplicate}
               disabled={extraCount === 0}
-              className="w-8 h-8 rounded-lg bg-amber-100 hover:bg-amber-200 disabled:opacity-30 disabled:cursor-not-allowed text-amber-800 font-black text-lg flex items-center justify-center transition-all"
+              className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900 hover:bg-amber-200 disabled:opacity-30 disabled:cursor-not-allowed text-amber-800 dark:text-amber-300 font-black text-lg flex items-center justify-center transition-all"
             >
               −
             </button>
-            <span className="w-7 text-center text-lg font-extrabold text-amber-800">{extraCount}</span>
+            <span className="w-7 text-center text-lg font-extrabold text-amber-800 dark:text-amber-300">{extraCount}</span>
             <button
               onClick={() => onMark('duplicate')}
               className="w-8 h-8 rounded-lg bg-amber-500 hover:bg-amber-400 text-white font-black text-lg flex items-center justify-center transition-all"
@@ -101,7 +100,7 @@ export default function StickerActionModal({ visible, sticker, userSticker, onCl
         {userSticker && (
           <button
             onClick={onRemove}
-            className="w-full py-2.5 rounded-xl font-semibold text-sm text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-all border border-gray-200 mb-1"
+            className="w-full py-2.5 rounded-xl font-semibold text-sm text-gray-400 hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-600 mb-1"
           >
             Remover marcação
           </button>
@@ -109,7 +108,7 @@ export default function StickerActionModal({ visible, sticker, userSticker, onCl
 
         <button
           onClick={onClose}
-          className="mt-2 w-full text-center text-sm text-gray-400 hover:text-gray-600 font-medium"
+          className="mt-2 w-full text-center text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 font-medium"
         >
           Fechar
         </button>

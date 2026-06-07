@@ -90,6 +90,17 @@ export function useStickers(userId: string | undefined) {
     }));
   }
 
+  async function clearExtraDuplicates(stickerId: number) {
+    if (!userId) return;
+    await supabase.from('user_stickers')
+      .update({ quantity: 1 })
+      .eq('user_id', userId).eq('sticker_id', stickerId);
+    setUserStickers(prev => ({
+      ...prev,
+      [stickerId]: { ...prev[stickerId], quantity: 1 },
+    }));
+  }
+
   async function removeSticker(stickerId: number) {
     if (!userId) return;
     await supabase.from('user_stickers').delete().eq('user_id', userId).eq('sticker_id', stickerId);
@@ -114,5 +125,5 @@ export function useStickers(userId: string | undefined) {
     .filter(s => s.status === 'need')
     .map(s => s.sticker_id);
 
-  return { userStickers, haveIds, duplicateIds, needIds, loading, markSticker, decrementDuplicate, removeSticker, refresh: fetchStickers };
+  return { userStickers, haveIds, duplicateIds, needIds, loading, markSticker, decrementDuplicate, clearExtraDuplicates, removeSticker, refresh: fetchStickers };
 }
