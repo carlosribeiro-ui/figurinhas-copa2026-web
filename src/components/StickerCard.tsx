@@ -15,8 +15,14 @@ const FWC_ICONS: Record<string, string> = {
   special: '🏆', stadium: '🏟️', legend: '⭐',
 };
 
+const FALTA_DISPLAY = {
+  bg: 'bg-red-50 border-red-300 dark:bg-red-950 dark:border-red-700',
+  badge: 'Falta',
+  badgeStyle: 'bg-red-600 text-white',
+};
+
 function resolveDisplay(userSticker?: UserSticker): { bg: string; badge: string; badgeStyle: string } | null {
-  if (!userSticker) return null;
+  if (!userSticker) return FALTA_DISPLAY;
   const { status, quantity } = userSticker;
   const isHave = status === 'have' || status === 'duplicate';
   if (status === 'need') return {
