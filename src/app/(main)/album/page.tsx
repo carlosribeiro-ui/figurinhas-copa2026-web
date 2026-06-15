@@ -284,7 +284,26 @@ export default function AlbumPage() {
            ABA ÁLBUM
         ══════════════════════════════════════ */
         <>
-          {/* Filtros */}
+          {/* ── Abas Todas / Tenho / Falta ── */}
+          <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex">
+            {(['all', 'have', 'falta'] as FilterType[]).map(f => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`flex-1 py-2.5 text-sm font-bold transition-all border-b-2 ${
+                  filter === f
+                    ? f === 'falta'
+                      ? 'text-red-600 dark:text-red-400 border-red-600 dark:border-red-400 bg-red-50 dark:bg-red-950'
+                      : 'text-green-800 dark:text-green-400 border-green-800 dark:border-green-400 bg-green-50 dark:bg-green-950'
+                    : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-200'
+                }`}
+              >
+                {FILTER_LABELS[f]}
+              </button>
+            ))}
+          </div>
+
+          {/* Filtros secundários (busca, país, seções) */}
           <div className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 px-4 py-2 flex items-center gap-2 overflow-x-auto scrollbar-hide">
             <input
               type="text"
@@ -326,22 +345,6 @@ export default function AlbumPage() {
                 <button onClick={() => selectCountry('')} className="ml-1 text-green-300 hover:text-white text-xs font-black">✕</button>
               </div>
             )}
-
-            <div className="w-px h-5 bg-gray-200 dark:bg-gray-600 flex-shrink-0" />
-
-            {(['all', 'have', 'falta'] as FilterType[]).map(f => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all flex-shrink-0 ${
-                  filter === f
-                    ? 'bg-green-800 text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                {FILTER_LABELS[f]}
-              </button>
-            ))}
 
             <div className="w-px h-5 bg-gray-200 dark:bg-gray-600 flex-shrink-0" />
 
